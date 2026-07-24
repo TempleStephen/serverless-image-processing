@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serverless Image Processing — System Schematic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a1929;
+    --bg-deep: #071320;
+    --surface: #0f2440;
+    --surface-raised: #12294a;
+    --border: rgba(141, 163, 190, 0.22);
+    --border-strong: rgba(141, 163, 190, 0.4);
+    --text: #e8eef5;
+    --text-muted: #8da3be;
+    --accent: #4fd1ff;
+    --accent-warm: #ffb454;
+    --grid-line: rgba(79, 209, 255, 0.06);
+    --font-mono: 'IBM Plex Mono', 'SF Mono', monospace;
+    --font-sans: 'IBM Plex Sans', -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+
+  body {
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 64px 24px 40px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border: 1px solid var(--accent);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: clamp(28px, 4.2vw, 42px);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    max-width: 20ch;
+  }
+
+  .lede {
+    color: var(--text-muted);
+    font-size: 16px;
+    max-width: 58ch;
+    margin-top: 18px;
+  }
+
+  /* ---------- Architecture diagram (hero) ---------- */
+
+  .diagram-wrap {
+    margin: 48px 0 8px;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--surface) 0%, var(--bg-deep) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .diagram-wrap::before {
+    content: 'FIG. 1 — DATA FLOW';
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    z-index: 2;
+  }
+
+  .diagram-wrap svg { display: block; width: 100%; height: auto; }
+
+  .flow-line {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    stroke-dasharray: 5 5;
+    fill: none;
+    opacity: 0.7;
+    animation: flow 1.6s linear infinite;
+  }
+
+  @keyframes flow {
+    to { stroke-dashoffset: -20; }
+  }
+
+  .node-box {
+    fill: var(--surface-raised);
+    stroke: var(--border-strong);
+    stroke-width: 1;
+  }
+
+  .node-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--text);
+    text-anchor: middle;
+  }
+
+  .node-sub {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    fill: var(--text-muted);
+    text-anchor: middle;
+    letter-spacing: 0.06em;
+  }
+
+  .node-dot { fill: var(--accent-warm); }
+
+  /* ---------- Sections ---------- */
+
+  section { margin-top: 56px; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 24px;
+  }
+
+  .section-head .tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  .section-head h2 {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  /* Services — spec cards */
+
+  .services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .service-card {
+    background: var(--surface);
+    padding: 20px;
+  }
+
+  .service-card .icon {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 14px;
+  }
+
+  .service-card .icon svg { width: 100%; height: 100%; }
+
+  .service-card .name {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .service-card .role {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  /* Workflow — real ordered pipeline */
+
+  .pipeline {
+    position: relative;
+    padding-left: 8px;
+  }
+
+  .pipeline::before {
+    content: '';
+    position: absolute;
+    left: 27px;
+    top: 14px;
+    bottom: 14px;
+    width: 1px;
+    background: repeating-linear-gradient(
+      to bottom, var(--border-strong) 0 4px, transparent 4px 8px
+    );
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    gap: 18px;
+    padding: 14px 0;
+    align-items: start;
+  }
+
+  .step .num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--bg);
+    background: var(--accent);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .step .body h3 {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .step .body p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Title block — footer */
+
+  footer {
+    margin-top: 64px;
+    border: 1px solid var(--border-strong);
+  }
+
+  .title-block {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+
+  .title-block > div {
+    padding: 14px 18px;
+    border-right: 1px solid var(--border);
+  }
+
+  .title-block > div:last-child { border-right: none; }
+
+  .title-block .label {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .title-block .value {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  @media (max-width: 560px) {
+    .title-block { grid-template-columns: 1fr; }
+    .title-block > div { border-right: none; border-bottom: 1px solid var(--border); }
+    .title-block > div:last-child { border-bottom: none; }
+  }
+
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="eyebrow">System Schematic · Rev. 01</div>
+  <h1>Serverless Image Processing System</h1>
+  <p class="lede">
+    An event-driven AWS pipeline that automatically processes images the
+    moment they land in S3 — no servers to patch, no queues to babysit.
+  </p>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- connectors -->
+      <path class="flow-line" d="M 130 100 H 230" />
+      <path class="flow-line" d="M 350 100 H 450" />
+      <path class="flow-line" d="M 570 100 H 670" />
+      <circle class="node-dot" cx="180" cy="100" r="2.5" />
+      <circle class="node-dot" cx="400" cy="100" r="2.5" />
+      <circle class="node-dot" cx="620" cy="100" r="2.5" />
+
+      <!-- node: upload -->
+      <rect class="node-box" x="30" y="76" width="100" height="48" />
+      <text class="node-label" x="80" y="97">Upload</text>
+      <text class="node-sub" x="80" y="112">USER / CLIENT</text>
+
+      <!-- node: s3 -->
+      <rect class="node-box" x="230" y="70" width="120" height="60" />
+      <text class="node-label" x="290" y="97">S3 Bucket</text>
+      <text class="node-sub" x="290" y="112">SOURCE</text>
+
+      <!-- node: lambda -->
+      <rect class="node-box" x="450" y="70" width="120" height="60" />
+      <text class="node-label" x="510" y="97">Lambda</text>
+      <text class="node-sub" x="510" y="112">PROCESSOR</text>
+
+      <!-- node: processed -->
+      <rect class="node-box" x="670" y="70" width="100" height="60" />
+      <text class="node-label" x="720" y="97">processed/</text>
+      <text class="node-sub" x="720" y="112">OUTPUT</text>
+
+      <!-- cloudwatch branch -->
+      <path class="flow-line" d="M 510 130 V 165 H 290 V 155" />
+      <rect class="node-box" x="230" y="155" width="120" height="34" />
+      <text class="node-label" x="290" y="176" style="font-size:10px">CloudWatch Logs</text>
+    </svg>
+  </div>
+
+  <section>
+    <div class="section-head">
+      <span class="tag">01</span>
+      <h2>AWS Services Used</h2>
+    </div>
+    <div class="services">
+      <div class="service-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4fd1ff" stroke-width="1.4">
+            <ellipse cx="12" cy="6" rx="8" ry="3"/>
+            <path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/>
+            <path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>
+          </svg>
+        </div>
+        <div class="name">Amazon S3</div>
+        <div class="role">Durable storage for raw and processed images.</div>
+      </div>
+      <div class="service-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4fd1ff" stroke-width="1.4">
+            <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>
+          </svg>
+        </div>
+        <div class="name">AWS Lambda</div>
+        <div class="role">Runs the processing logic on each new upload.</div>
+      </div>
+      <div class="service-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4fd1ff" stroke-width="1.4">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
+          </svg>
+        </div>
+        <div class="name">IAM</div>
+        <div class="role">Scoped roles governing who can touch what.</div>
+      </div>
+      <div class="service-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4fd1ff" stroke-width="1.4">
+            <path d="M3 17l5-6 4 4 5-8 4 5"/>
+            <circle cx="20" cy="6" r="1.4" fill="#4fd1ff"/>
+          </svg>
+        </div>
+        <div class="name">CloudWatch</div>
+        <div class="role">Execution logs and metrics for every run.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="tag">02</span>
+      <h2>Workflow</h2>
+    </div>
+    <div class="pipeline">
+      <div class="step">
+        <div class="num">1</div>
+        <div class="body">
+          <h3>Image is uploaded</h3>
+          <p>A user or client drops a new image into the source S3 bucket.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div class="body">
+          <h3>S3 triggers Lambda</h3>
+          <p>An ObjectCreated event invokes the processing function within milliseconds.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div class="body">
+          <h3>Lambda processes the image</h3>
+          <p>The function copies the object into the <code>processed/</code> prefix under a unique key.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <div class="body">
+          <h3>CloudWatch records the run</h3>
+          <p>Execution logs and metrics are captured for monitoring and troubleshooting.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="title-block">
+      <div>
+        <div class="label">Project</div>
+        <div class="value">Serverless Image Processing System</div>
+      </div>
+      <div>
+        <div class="label">Drawn By</div>
+        <div class="value">Temple Stephen</div>
+      </div>
+      <div>
+        <div class="label">Sheet</div>
+        <div class="value">01 / 01 — Rev. 01</div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
