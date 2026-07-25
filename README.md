@@ -1,22 +1,26 @@
 <div align="center">
 
-# Serverless Image Processing Pipeline
+# ⚡ Serverless Image Processing Pipeline
 
-![AWS](https://img.shields.io/badge/AWS-Cloud-orange?logo=amazonaws)
-![Lambda](https://img.shields.io/badge/AWS-Lambda-FF9900?logo=awslambda)
-![Amazon S3](https://img.shields.io/badge/Amazon-S3-569A31?logo=amazons3)
-![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python)
-![Boto3](https://img.shields.io/badge/Boto3-AWS_SDK-orange)
-![Serverless](https://img.shields.io/badge/Architecture-Serverless-success)
+### *Upload an image to S3. Everything else happens on its own.*
 
-An event-driven serverless image processing pipeline built with **AWS Lambda**, **Amazon S3**, **IAM**, **CloudWatch**, and **Python**.
+**[📂 Repository](https://github.com/TempleStephen/serverless-image-processing)** &nbsp;•&nbsp; **[💼 LinkedIn](https://www.linkedin.com/in/temple-stephen-74664a1b3/)** &nbsp;•&nbsp; **[🚀 Deployment Guide](#deployment-guide)**
 
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/TempleStephen/serverless-image-processing)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Temple%20Stephen-0A66C2?logo=linkedin)](https://www.linkedin.com/in/temple-stephen-74664a1b3/)
+<br>
+
+![AWS](https://img.shields.io/badge/AWS-Cloud-232F3E?style=for-the-badge&logo=amazonaws&logoColor=FF9900)
+![Lambda](https://img.shields.io/badge/Lambda-Serverless-FF9900?style=for-the-badge&logo=awslambda&logoColor=white)
+![S3](https://img.shields.io/badge/S3-Storage-569A31?style=for-the-badge&logo=amazons3&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
 </div>
 
 ---
+
+An event-driven serverless image processing pipeline built with **AWS Lambda**, **Amazon S3**, **IAM**, **CloudWatch**, and **Python**.
+
+---
+
 
 ## Table of Contents
 
@@ -79,7 +83,7 @@ It's a practical, end-to-end example of serverless computing, IAM permission man
 serverless-image-processing/
 │
 ├── architecture/
-│   └── Architecture_Diagram.png
+│   └── ArchitectureDiagram.png
 │
 ├── lambda/
 │   └── lambda_function.py
