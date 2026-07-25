@@ -45,7 +45,7 @@ It's a practical, end-to-end example of serverless computing, IAM permission man
 
 ## Architecture
 
-![Architecture diagram showing the S3 to Lambda to processed folder pipeline](architecture/architecture-diagram.png)
+![Architecture diagram showing the S3 to Lambda to processed folder pipeline](architecture/Architecture_Diagram.png)
 
 ---
 
@@ -79,20 +79,22 @@ It's a practical, end-to-end example of serverless computing, IAM permission man
 serverless-image-processing/
 │
 ├── architecture/
-│   └── architecture-diagram.png
+│   └── Architecture_Diagram.png
 │
 ├── lambda/
 │   └── lambda_function.py
 │
 ├── screenshots/
+│   ├── Policy.png
+│   ├── Policy to role.png
+│   ├── Lambad function role.png
+│   ├── AmazonS3FullAccess.png
 │   ├── Buckets.png
-│   ├── Lambda Function.png
-│   ├── Lambda Trigger.png
-│   ├── CloudWatch Logs.png
-│   ├── Processed Folder.png
-│   ├── IAM Role.png
-│   ├── Environment Variables.png
-│   └── Website.png
+│   ├── File upload.png
+│   ├── Trigger.png
+│   ├── Lambda function code deploy.png
+│   ├── Lambda function.png
+│   └── Bucket-output.png
 │
 ├── website/
 │   ├── index.html
@@ -171,14 +173,16 @@ CloudWatch should show a successful Lambda execution.
 
 | | |
 |---|---|
-| **Amazon S3 Bucket** | ![Amazon S3](screenshots/Buckets.png) |
-| **Lambda Function** | ![Lambda](screenshots/Lambda%20Function.png) |
-| **Lambda Trigger** | ![Trigger](screenshots/Lambda%20Trigger.png) |
-| **IAM Role** | ![IAM](screenshots/IAM%20Role.png) |
-| **Environment Variables** | ![Environment Variables](screenshots/Environment%20Variables.png) |
-| **CloudWatch Logs** | ![CloudWatch](screenshots/CloudWatch%20Logs.png) |
-| **Processed Image** | ![Processed Folder](screenshots/Processed%20Folder.png) |
-| **Website** | ![Website](screenshots/Website.png) |
+| **IAM Policy** | ![IAM policy document](screenshots/Policy.png) |
+| **Policy Attached to Role** | ![Policy attached to the Lambda execution role](screenshots/Policy%20to%20role.png) |
+| **Lambda Function Role** | ![Lambda function IAM role](screenshots/Lambad%20function%20role.png) |
+| **Amazon S3 Full Access Permission** | ![AmazonS3FullAccess permission](screenshots/AmazonS3FullAccess.png) |
+| **S3 Buckets** | ![S3 buckets list](screenshots/Buckets.png) |
+| **File Upload** | ![Image uploaded to S3](screenshots/File%20upload.png) |
+| **S3 Trigger** | ![S3 event trigger configuration](screenshots/Trigger.png) |
+| **Lambda Function Code Deployment** | ![Lambda function code deployed](screenshots/Lambda%20function%20code%20deploy.png) |
+| **Lambda Function** | ![Lambda function configuration](screenshots/Lambda%20function.png) |
+| **Processed Output** | ![Processed image in output bucket](screenshots/Bucket-output.png) |
 
 ---
 
