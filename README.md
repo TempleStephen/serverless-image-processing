@@ -45,7 +45,7 @@ It's a practical, end-to-end example of serverless computing, IAM permission man
 
 ## Architecture
 
-![Architecture diagram showing the S3 to Lambda to processed folder pipeline](architecture/Architecture Diagram.png)
+![Architecture diagram showing the S3 to Lambda to processed folder pipeline](architecture/ArchitectureDiagram.png)
 
 ---
 
